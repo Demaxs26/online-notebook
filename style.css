@@ -1,0 +1,19 @@
+
+
+#canvas{
+    border: black 1px solid;
+}
+
+
+#drawButton{
+    width: 3vw;
+    height: 3vh;
+    border-color: aliceblue;
+    border: black 1px solid;
+    text-align: center;
+    cursor: pointer;
+}
+
+#drawButton:hover{
+    background-color:gray;
+}

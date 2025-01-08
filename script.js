@@ -5,17 +5,36 @@ const canvas = document.getElementById("canvas");
 const colorPanel = document.getElementById("colorpanel");
 const widthselector = document.getElementById("lineWidth");
 const butonTelecharger = document.getElementById("telechargerImage");
+const butonPickColor = document.getElementById("pickButton");
+
 let liste_point = []
 let ctx = canvas.getContext("2d");
 ctx.lineWidth = 125;
 ctx.lineCap = "round";
-ctx.strokeStyle = '#ff0000';
+ctx.strokeStyle = 'rgb(0,0,0';
 
 
 
 const telecharger  = (e) =>{
-    canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    window.location.href = canvas;
+    let image = ctx.createImageData(100, 100);
+    console.log(image);
+    let imagecanva = ctx.getImageData(0,0,100,100);
+    console.log(imagecanva);
+}
+
+const pick = (event) =>{
+    x = event.clientX;
+    y = event.clientY;
+    console.log(x,y);
+    let pixel = ctx.getImageData(x, y, 1, 1);
+    console.log(pixel)
+    let data = pixel.data;
+    let color = `rgba(${data[0]},${data[1]},${data[2]},${data[3]})`
+    console.log(color)
+    updatecolor(color);
+    canvas.addEventListener("pointerdown",draw)
+    canvas.style.cursor = "crosshair";
+    colorPanel.value = color
 }
 
 /**
@@ -45,9 +64,8 @@ function dot(e){
 
 
 
-const updatecolor = (e) =>{
-    console.log(e.target.value);
-    ctx.strokeStyle = e.target.value;
+const updatecolor = (color) =>{
+    ctx.strokeStyle = color;
 }
 
 const updatewidth = () =>{
@@ -63,20 +81,26 @@ const movemouse  = (e) => {
     
 }
 
-drawButton.addEventListener("click" , function(){
-    
-    canvas.addEventListener("pointerdown",
-        (event) => {
-            dot(event)
+
+const draw  = (event) =>{
+    dot(event);
             addEventListener("mousemove", movemouse);
             canvas.addEventListener("mouseup",(event) => {
-                removeEventListener("mousemove",movemouse)
-                liste_point = []
-            })
-        })
-    })
-    
-
-colorPanel.addEventListener("change", updatecolor);
+                removeEventListener("mousemove",movemouse);
+                liste_point = [];
+            });
+};
+drawButton.addEventListener("click" , function(){
+    canvas.addEventListener("pointerdown",draw);
+});
+colorPanel.addEventListener("change", (e) =>{
+    updatecolor(e.target.value);
+});
 widthselector.addEventListener("change", updatewidth);
-butonTelecharger.addEventListener("click", telecharger)
+butonTelecharger.addEventListener("click", telecharger);
+butonPickColor.addEventListener('click', function(){
+    canvas.removeEventListener("pointerdown",draw);
+    canvas.style.cursor = "copy";
+    canvas.addEventListener("click",pick,{once:true});
+    
+});

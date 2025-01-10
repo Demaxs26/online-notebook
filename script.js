@@ -16,10 +16,11 @@ ctx.strokeStyle = 'rgb(0,0,0';
 
 
 const telecharger  = (e) =>{
-    let image = ctx.createImageData(100, 100);
-    console.log(image);
-    let imagecanva = ctx.getImageData(0,0,100,100);
-    console.log(imagecanva);
+    let image = canvas.toDataURL();
+    const lien = document.createElement('a');
+    lien.href = image;
+    lien.download = 'dessin.png';
+    lien.click();
 }
 
 const pick = (event) =>{

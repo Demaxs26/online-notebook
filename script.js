@@ -6,6 +6,7 @@ const colorPanel = document.getElementById("colorpanel");
 const widthselector = document.getElementById("lineWidth");
 const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
+const butonSave = document.getElementById("saveButton");
 
 let liste_point = []
 let ctx = canvas.getContext("2d");
@@ -13,7 +14,9 @@ ctx.lineWidth = 125;
 ctx.lineCap = "round";
 ctx.strokeStyle = 'rgb(0,0,0';
 
-
+/**
+ * @param {ClickEvent} e 
+ */
 
 const telecharger  = (e) =>{
     let image = canvas.toDataURL();
@@ -21,7 +24,21 @@ const telecharger  = (e) =>{
     lien.href = image;
     lien.download = 'dessin.png';
     lien.click();
-}
+};
+
+const save = () =>{
+    const image = ctx.getImageData(0,0,1500,800);
+    console.log(image);
+    localStorage.setItem("draw", image);
+    const draw = localStorage.getItem("draw");
+    console.log(draw);
+};
+
+
+/**
+ * 
+ * @param {pickEvent} event 
+ */
 
 const pick = (event) =>{
     x = event.clientX;
@@ -38,14 +55,8 @@ const pick = (event) =>{
     colorPanel.value = color
 }
 
-/**
- * @param {} e 
- */
-
-
 
 function fillgap(){
-    
     ctx.beginPath();
     ctx.moveTo(liste_point[0][0],liste_point[0][1])
     ctx.lineTo(liste_point[1][0],liste_point[1][1]);
@@ -53,6 +64,10 @@ function fillgap(){
     liste_point.shift()
 
 }
+
+/**
+ * @param {PointerEvent} e 
+ */
 
 function dot(e){
     ctx.beginPath();
@@ -63,7 +78,10 @@ function dot(e){
 
 }
 
-
+/**
+ * 
+ * @param {String} color 
+ */
 
 const updatecolor = (color) =>{
     ctx.strokeStyle = color;
@@ -73,6 +91,10 @@ const updatewidth = () =>{
     ctx.lineWidth = widthselector.value;
 }
 
+/**
+ * 
+ * @param {MouseEvent} e 
+ */
 
 const movemouse  = (e) => {
     liste_point.push([e.clientX-10, e.clientY])
@@ -82,6 +104,10 @@ const movemouse  = (e) => {
     
 }
 
+/**
+ * 
+ * @param {PointerEvent} event 
+ */
 
 const draw  = (event) =>{
     dot(event);
@@ -91,6 +117,10 @@ const draw  = (event) =>{
                 liste_point = [];
             });
 };
+
+
+// Event listener
+
 drawButton.addEventListener("click" , function(){
     canvas.addEventListener("pointerdown",draw);
 });
@@ -105,3 +135,4 @@ butonPickColor.addEventListener('click', function(){
     canvas.addEventListener("click",pick,{once:true});
     
 });
+butonSave.addEventListener("click",save)

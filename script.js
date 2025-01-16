@@ -7,12 +7,15 @@ const widthselector = document.getElementById("lineWidth");
 const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
 const butonSave = document.getElementById("saveButton");
+const butonBack = document.getElementById("restoreButton");
 
 let liste_point = []
 let ctx = canvas.getContext("2d");
 ctx.lineWidth = 125;
 ctx.lineCap = "round";
 ctx.strokeStyle = 'rgb(0,0,0';
+const fileSave = []
+
 
 /**
  * @param {ClickEvent} e 
@@ -39,6 +42,10 @@ const save = () =>{
  * 
  * @param {pickEvent} event 
  */
+
+const restore = () =>{
+    ctx.putImageData(pileSave.pop(),0,0);
+}
 
 const pick = (event) =>{
     x = event.clientX;
@@ -110,12 +117,15 @@ const movemouse  = (e) => {
  */
 
 const draw  = (event) =>{
+    pileSave.push(ctx.getImageData(0,0,1500,800));
     dot(event);
             addEventListener("mousemove", movemouse);
             canvas.addEventListener("mouseup",(event) => {
                 removeEventListener("mousemove",movemouse);
                 liste_point = [];
+                
             });
+    
 };
 
 
@@ -136,3 +146,4 @@ butonPickColor.addEventListener('click', function(){
     
 });
 butonSave.addEventListener("click",save)
+butonBack.addEventListener("click",restore);

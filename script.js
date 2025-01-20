@@ -8,13 +8,15 @@ const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
 const butonSave = document.getElementById("saveButton");
 const butonBack = document.getElementById("restoreButton");
-
-let liste_point = []
+const butonunBack = document.getElementById("UnrestoreButton");
+let constSave = NaN
+let liste_point = [];
 let ctx = canvas.getContext("2d");
 ctx.lineWidth = 125;
 ctx.lineCap = "round";
 ctx.strokeStyle = 'rgb(0,0,0';
-const fileSave = []
+let listeSave = [];
+let pointerAdvancement = 0
 
 
 /**
@@ -44,7 +46,27 @@ const save = () =>{
  */
 
 const restore = () =>{
-    ctx.putImageData(pileSave.pop(),0,0);
+    pointerAdvancement > 0 ? pointerAdvancement--:NaN;
+    console.log(pointerAdvancement);
+    changeState();
+}
+
+const unRestore = () =>{
+    pointerAdvancement < listeSave.length ? pointerAdvancement++:NaN;
+    changeState();
+}
+
+
+
+const changeState = () =>{
+    console.log(listeSave.length, pointerAdvancement)
+    ctx.putImageData(listeSave[pointerAdvancement-1], 0, 0);
+}
+
+const saveState = () =>{
+    listeSave.push(ctx.getImageData(0,0,1500,800));
+    console.log(pointerAdvancement);
+    pointerAdvancement = pointerAdvancement + 1;
 }
 
 const pick = (event) =>{
@@ -104,11 +126,17 @@ const updatewidth = () =>{
  */
 
 const movemouse  = (e) => {
+    
     liste_point.push([e.clientX-10, e.clientY])
     if (liste_point.length > 2){
         fillgap()
     }
     
+}
+
+const unsavedot = () =>{
+    ctx.putImageData(dotSave,0,0);
+    dotSave = NaN
 }
 
 /**
@@ -117,14 +145,18 @@ const movemouse  = (e) => {
  */
 
 const draw  = (event) =>{
-    pileSave.push(ctx.getImageData(0,0,1500,800));
+    dotSave = ctx.getImageData(0,0,1500,800)
     dot(event);
-            addEventListener("mousemove", movemouse);
-            canvas.addEventListener("mouseup",(event) => {
-                removeEventListener("mousemove",movemouse);
-                liste_point = [];
-                
-            });
+    addEventListener("mousemove", movemouse,unsavedot);
+    canvas.addEventListener("mouseup",(event) => {
+        removeEventListener("mousemove",movemouse);
+        liste_point = [];
+        listeSave.pop();
+        pointerAdvancement = pointerAdvancement -1;
+        saveState();
+        
+    });
+    dotSave === NaN ?NaN:saveState();
     
 };
 
@@ -132,6 +164,7 @@ const draw  = (event) =>{
 // Event listener
 
 drawButton.addEventListener("click" , function(){
+    saveState();
     canvas.addEventListener("pointerdown",draw);
 });
 colorPanel.addEventListener("change", (e) =>{
@@ -145,5 +178,6 @@ butonPickColor.addEventListener('click', function(){
     canvas.addEventListener("click",pick,{once:true});
     
 });
-butonSave.addEventListener("click",save)
+butonSave.addEventListener("click",save);
 butonBack.addEventListener("click",restore);
+butonunBack.addEventListener("click", unRestore);

@@ -8,15 +8,16 @@ const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
 const butonSave = document.getElementById("saveButton");
 const butonBack = document.getElementById("restoreButton");
-const butonunBack = document.getElementById("UnrestoreButton");
+
 let constSave = NaN
 let liste_point = [];
 let ctx = canvas.getContext("2d");
 ctx.lineWidth = 125;
 ctx.lineCap = "round";
 ctx.strokeStyle = 'rgb(0,0,0';
-let listeSave = [];
-let pointerAdvancement = 0
+let pileSave = [];
+let recentChane = true;
+
 
 
 /**
@@ -46,27 +47,14 @@ const save = () =>{
  */
 
 const restore = () =>{
-    pointerAdvancement > 0 ? pointerAdvancement--:NaN;
-    console.log(pointerAdvancement);
-    changeState();
-}
-
-const unRestore = () =>{
-    pointerAdvancement < listeSave.length ? pointerAdvancement++:NaN;
-    changeState();
-}
-
-
-
-const changeState = () =>{
-    console.log(listeSave.length, pointerAdvancement)
-    ctx.putImageData(listeSave[pointerAdvancement-1], 0, 0);
-}
-
-const saveState = () =>{
-    listeSave.push(ctx.getImageData(0,0,1500,800));
-    console.log(pointerAdvancement);
-    pointerAdvancement = pointerAdvancement + 1;
+    if (pileSave.length != 0){
+        if (recentChane){
+            ctx.putImageData(pileSave.pop(),0,0)
+        }
+        ctx.putImageData(pileSave.pop(),0,0)
+        recentChane = false
+    }
+    
 }
 
 const pick = (event) =>{
@@ -151,20 +139,18 @@ const draw  = (event) =>{
     canvas.addEventListener("mouseup",(event) => {
         removeEventListener("mousemove",movemouse);
         liste_point = [];
-        listeSave.pop();
-        pointerAdvancement = pointerAdvancement -1;
-        saveState();
-        
+        pileSave.pop();
+        pileSave.push(ctx.getImageData(0,0,1500,800));
     });
-    dotSave === NaN ?NaN:saveState();
-    
+    dotSave === NaN ?NaN:pileSave.push(ctx.getImageData(0,0,1500,800));
+    recentChane = true
 };
 
 
 // Event listener
 
 drawButton.addEventListener("click" , function(){
-    saveState();
+    pileSave.push(ctx.getImageData(0,0,1500,800));
     canvas.addEventListener("pointerdown",draw);
 });
 colorPanel.addEventListener("change", (e) =>{
@@ -180,4 +166,3 @@ butonPickColor.addEventListener('click', function(){
 });
 butonSave.addEventListener("click",save);
 butonBack.addEventListener("click",restore);
-butonunBack.addEventListener("click", unRestore);

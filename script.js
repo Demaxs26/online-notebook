@@ -8,6 +8,9 @@ const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
 const butonSave = document.getElementById("saveButton");
 const butonBack = document.getElementById("restoreButton");
+const butonEraser = document.getElementById("eraser");
+
+
 
 let constSave = NaN
 let liste_point = [];
@@ -19,6 +22,24 @@ let pileSave = [];
 let recentChane = true;
 
 
+
+sauvegarde = () => {
+    let request = indexedDB.open("imageDB", 1);
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        db.transaction(["images"])
+        .objectStore("images")
+        .get("image1").onsuccess = function (e) {
+            ctx.putImageData(e.target.result.data, 0, 0)
+        }
+        
+    };
+
+    request.onerror = function (event) {
+    }
+    
+
+};
 
 /**
  * @param {ClickEvent} e 
@@ -34,11 +55,27 @@ const telecharger  = (e) =>{
 
 const save = () =>{
     const image = ctx.getImageData(0,0,1500,800);
-    console.log(image);
-    localStorage.setItem("draw", image);
-    const draw = localStorage.getItem("draw");
-    console.log(draw);
+    let request = indexedDB.open("imageDB", 1);
+    request.onupgradeneeded = function (event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("images")) {
+            db.createObjectStore("images", { keyPath: "id" });
+        }
+    };
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction("images", "readwrite");
+        const store = transaction.objectStore("images");
+        const imageBlobBD = { id: "image1", data: image};
+        store.put(imageBlobBD);
+        
+    };
+
+    request.onerror = function () {
+        console.error("Erreur d'ouverture de la base de données IndexedDB");
+    };
 };
+
 
 
 /**
@@ -127,6 +164,11 @@ const unsavedot = () =>{
     dotSave = NaN
 }
 
+const erase = () =>{
+    updatecolor("white");
+    drawButton.click()
+}
+
 /**
  * 
  * @param {PointerEvent} event 
@@ -166,3 +208,12 @@ butonPickColor.addEventListener('click', function(){
 });
 butonSave.addEventListener("click",save);
 butonBack.addEventListener("click",restore);
+butonEraser.addEventListener("click",erase);
+   
+window.addEventListener("load", sauvegarde, false)
+
+
+
+
+
+

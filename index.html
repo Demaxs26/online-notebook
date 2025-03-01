@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html >
+<html lang="eng">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
@@ -13,27 +13,38 @@
     
         </head>
         <body>
-            <canvas id="canvas" width="1500" height="800" willReadFrequently = "true">
-               
-            </canvas>
-            <div id = "containButton">
-                <div class = "button" id = "drawButton">Draw</div>
-                <select name = "width" id = "lineWidth">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                </select>
-                <input placeholder = "color"type="color" id="colorpanel" name="color" value="#000000" />
-                <button  type ="button" id = "telechargerImage">Download</button>
-                <button type = "button" id = "pickButton">pick color</button>
-                <button type = "button" id = "saveButton">save drawing</button>
-                <button type = "button" id = "restoreButton">back</button>
+            <img class = "parameterlogo" src="./engrenage.png" widt="70px" height="70px">
+            <div class = "titleBox">
+                <div class = "title">
+                    <h1>NOTEBOOK</h1>
+                    <img  class = "logo" src ="./livre-ouvert.png" width="300px" height="250px">
+                </div>
+                <p class = 'littleTitle'>Un livre numérique pour <span>dessiner</span> et <span>réver.</span></p>
             </div>
-            
+            <img class = "fleche" src ="./fleche-vers-le-bas.png" width="70px" height="70px">
+            <div id="canvaspage">
+                <canvas id="canvas" width="1500" height="800" willReadFrequently = "true">
+                
+                </canvas>
+                <div id = "containButton">
+                    <div class = "button" id = "drawButton">Draw</div>
+                    <select name = "width" id = "lineWidth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                    </select>
+                    <input placeholder = "color"type="color" id="colorpanel" name="color" value="#000000" />
+                    <button  type ="button" id = "telechargerImage">Download</button>
+                    <button type = "button" id = "pickButton">pick color</button>
+                    <button type = "button" id = "saveButton">save drawing</button>
+                    <button type = "button" id = "restoreButton">back</button>
+                    <button type = "button" id = "eraser">eraser</button>
+                </div>
+            </div>
         </body>
 </html>

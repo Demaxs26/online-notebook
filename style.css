@@ -42,13 +42,28 @@
 }
 
 body{
-    display: grid;
-    place-content: center left ;
-    height: 100vh;
+    background-color: #D9D9D9;
+    background-image: url('assets/backgrounds/Polygon\ 4.svg'),
+                    url('assets/backgrounds/Polygon\ 6.svg'),
+                    url('assets/backgrounds/Polygon\ 6\ \(1\).svg'),
+                    url('assets/backgrounds/Polygon\ 7.svg'),
+                    url('assets/backgrounds/Polygon\ 8.svg'),
+                    url('assets/backgrounds/Polygon\ 9.svg');
+    background-repeat: no-repeat;
+    background-position: -10vw 50vh ,70vw 20vh,65vw 70vh,72vw 42vh,0 -40vh,20vw 60vh;
+    background-size: calc(30vw + 30vh),calc(15vw + 15vh),calc(7vw + 7vh),calc(17vw + 17vh),calc(20vw + 20vh),calc(9vw + 9vh);
+}
+
+.sect-welcome-page{
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .parameterlogo{
     margin: 0 0 0 3vw;
+    align-self: start;
 }
 
 .titleBox{
@@ -63,17 +78,17 @@ body{
 }
 
 h1{
-    font-size: 12rem;
+    font-size: 8rem;
     font-family: "Anton SC";
     letter-spacing: 1rem;
 }
 
-.logo{
+.icon-book{
     margin: 0 0 0 7vw;
 }
 
 .littleTitle{
-    font-size: 3.25rem;
+    font-size: 2.5rem;
     font-weight: 500;
 }
 
@@ -83,7 +98,8 @@ h1{
 
 .fleche{
     place-self: center;
-
+    margin-top: calc(20vh - 300px);
+    z-index: -1;
 }
 
 

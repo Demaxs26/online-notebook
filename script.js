@@ -3,13 +3,16 @@
 const drawButton = document.getElementById("drawButton");
 const canvas = document.getElementById("canvas");
 const colorPanel = document.getElementById("colorpanel");
-const widthselector = document.getElementById("lineWidth");
 const butonTelecharger = document.getElementById("telechargerImage");
 const butonPickColor = document.getElementById("pickButton");
 const butonSave = document.getElementById("saveButton");
 const butonBack = document.getElementById("restoreButton");
 const butonEraser = document.getElementById("eraser");
-
+const butonBrush = document.getElementById("brush-button");
+const wrapperBrush = document.querySelector(".wrapper-brush");
+const lineWeightSlider = document.querySelectorAll(".lineWidth");
+const lineWidthdisplay = document.querySelector(".lineWidthdisplay");
+const textSave = document.querySelector(".text-save");
 
 
 let constSave = NaN
@@ -31,6 +34,7 @@ sauvegarde = () => {
         .objectStore("images")
         .get("image1").onsuccess = function (e) {
             ctx.putImageData(e.target.result.data, 0, 0)
+
         }
         
     };
@@ -68,6 +72,10 @@ const save = () =>{
         const store = transaction.objectStore("images");
         const imageBlobBD = { id: "image1", data: image};
         store.put(imageBlobBD);
+        textSave.style.display = "block";
+        setTimeout(() => {
+            textSave.style.display = "none";
+          }, 1000);
         
     };
 
@@ -101,7 +109,7 @@ const pick = (event) =>{
     let pixel = ctx.getImageData(x, y, 1, 1);
     console.log(pixel)
     let data = pixel.data;
-    let color = `rgba(${data[0]},${data[1]},${data[2]},${data[3]})`
+    let color = `rgba(${data[0]},${data[1]},${data[2]})` //,${data[3]}
     console.log(color)
     updatecolor(color);
     canvas.addEventListener("pointerdown",draw)
@@ -124,9 +132,12 @@ function fillgap(){
  */
 
 function dot(e){
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY -rect.top;
     ctx.beginPath();
-    ctx.moveTo(e.clientX-10, e.clientY);
-    ctx.lineTo(e.clientX-10, e.clientY);
+    ctx.moveTo(x, y); //-10
+    ctx.lineTo(x, y);
     ctx.stroke();
     liste_point.shift()
 
@@ -141,8 +152,10 @@ const updatecolor = (color) =>{
     ctx.strokeStyle = color;
 }
 
-const updatewidth = () =>{
-    ctx.lineWidth = widthselector.value;
+function updatewidth(range){
+    ctx.lineWidth = range.value;
+    lineWidthdisplay.textContent = range.value
+
 }
 
 /**
@@ -151,8 +164,10 @@ const updatewidth = () =>{
  */
 
 const movemouse  = (e) => {
-    
-    liste_point.push([e.clientX-10, e.clientY])
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY -rect.top;
+    liste_point.push([x, y]) // -10
     if (liste_point.length > 2){
         fillgap()
     }
@@ -188,6 +203,25 @@ const draw  = (event) =>{
     recentChane = true
 };
 
+const displayBrush = () =>{
+    wrapperBrush.style.display = "flex";
+    console.log("ok1");
+
+}
+const unDisplayBrush = () => {
+    const timeOuotDelay = setTimeout(() => {
+        wrapperBrush.style.display = "none";
+        console.log("ok2");
+      }, 1000);
+    wrapperBrush.addEventListener("mouseover",function(){
+        clearTimeout(timeOuotDelay);
+        console.log("time out delayed")
+    },{once:true})
+
+}
+
+
+
 
 // Event listener
 
@@ -198,7 +232,12 @@ drawButton.addEventListener("click" , function(){
 colorPanel.addEventListener("change", (e) =>{
     updatecolor(e.target.value);
 });
-widthselector.addEventListener("change", updatewidth);
+// widthselector.forEach((item)=>{
+//     item.addEventListener("change", updatewidth(item));
+// });
+lineWeightSlider[0].addEventListener("input",function(){updatewidth(lineWeightSlider[0])});
+lineWeightSlider[1].addEventListener("input",function(){updatewidth(lineWeightSlider[1])});
+lineWeightSlider[2].addEventListener("input",function(){updatewidth(lineWeightSlider[2])});
 butonTelecharger.addEventListener("click", telecharger);
 butonPickColor.addEventListener('click', function(){
     canvas.removeEventListener("pointerdown",draw);
@@ -209,7 +248,20 @@ butonPickColor.addEventListener('click', function(){
 butonSave.addEventListener("click",save);
 butonBack.addEventListener("click",restore);
 butonEraser.addEventListener("click",erase);
-   
+butonBrush.addEventListener("click",displayBrush);
+butonBrush.addEventListener("mouseout",unDisplayBrush)
+wrapperBrush.addEventListener("mouseout",unDisplayBrush);
+wrapperBrush.addEventListener("mouseover",function(){
+    console.log("overed")});
+// butonBrush.addEventListener("mouseleave",function(){
+//     document.addEventListener('mouseover', (event) => {
+//         console.log(event.target);
+//         if (!(event.target in [wrapperBrush,lineWeightSlider[0],lineWeightSlider[1],lineWeightSlider[2]])){
+//             console.log('not')
+//             console.log([wrapperBrush,lineWeightSlider[0],lineWeightSlider[1],lineWeightSlider[2]])
+//         }
+//       });
+// })
 window.addEventListener("load", sauvegarde, false)
 
 

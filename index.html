@@ -27,27 +27,30 @@
             </section>
 
             <div id="canvaspage">
-                <canvas id="canvas" width="1500" height="800" willReadFrequently = "true">
-                
-                </canvas>
+                <div class = "box-canva">
+                    <p class = "text-save">Your drawing have been saved.</p>
+                    <canvas id="canvas" width="1000" height="500" willReadFrequently = "true">
+                    </canvas >
+                </div>
+
                 <div id = "containButton">
+                    <img class = "button" src = 'assets/icon-menu.svg' alt = "parametre"/>
                     <div class = "button" id = "drawButton">Draw</div>
-                    <select name = "width" id = "lineWidth">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                    </select>
+                    <img class = "button" id = "brush-button"src = "assets/icon-brush.svg" alt = "brush"/>
+                    <div class = "wrapper-brush">
+                        <p class = "lineWidthdisplay">125</p>
+                        <div class = "rangeBox">
+                            <input type = range  min = "1" max = "50"name = "width" class = "lineWidth"/>
+                            <input type = range  min = "50" max = "200"name = "width" class = "lineWidth"/>
+                            <input type = range  min = "200" max = "500"name = "width" class = "lineWidth"/>
+                        </div>
+                    </div>
                     <input placeholder = "color"type="color" id="colorpanel" name="color" value="#000000" />
-                    <button  type ="button" id = "telechargerImage">Download</button>
-                    <button type = "button" id = "pickButton">pick color</button>
-                    <button type = "button" id = "saveButton">save drawing</button>
-                    <button type = "button" id = "restoreButton">back</button>
-                    <button type = "button" id = "eraser">eraser</button>
+                    <img class ="button" id = "telechargerImage" src ="assets/icon-download.svg"alt ="Download"/>
+                    <img class = "button" id = "pickButton" src = "assets/icon-select.svg" alt = "pick color" /> 
+                    <img class = "button" id = "saveButton" src ="assets/icon-save.svg" alt ="save drawing"/>
+                    <img class = "button" id = "restoreButton" src ="assets/icon-retour.svg" alt = "retour"/>
+                    <img class = "button" id = "eraser" src = "assets/icon-gomme.svg" alt = "effacer"/>
                 </div>
             </div>
         </body>

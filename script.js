@@ -13,7 +13,10 @@ const wrapperBrush = document.querySelector(".wrapper-brush");
 const lineWeightSlider = document.querySelectorAll(".lineWidth");
 const lineWidthdisplay = document.querySelector(".lineWidthdisplay");
 const textSave = document.querySelector(".text-save");
+const cursor = document.querySelector(".custom-cursor");
 
+const ratioX = canvas.clientWidth / canvas.width;
+const ratioY = canvas.clientHeight / canvas.height;
 
 let constSave = NaN
 let liste_point = [];
@@ -153,9 +156,15 @@ const updatecolor = (color) =>{
 }
 
 function updatewidth(range){
-    ctx.lineWidth = range.value;
-    lineWidthdisplay.textContent = range.value
-
+    const size = range.value;
+    ctx.lineWidth = size;
+    lineWidthdisplay.textContent = size;
+    cursor.style.left = '50%';
+    cursor.style.top = '50%';
+    cursor.style.display = "block"
+    cursor.style.width = size + "px";
+    cursor.style.height = size + "px";
+    
 }
 
 /**
@@ -212,6 +221,7 @@ const unDisplayBrush = () => {
     const timeOuotDelay = setTimeout(() => {
         wrapperBrush.style.display = "none";
         console.log("ok2");
+        cursor.style.display = "none"
       }, 1000);
     wrapperBrush.addEventListener("mouseover",function(){
         clearTimeout(timeOuotDelay);
@@ -247,21 +257,31 @@ butonPickColor.addEventListener('click', function(){
 });
 butonSave.addEventListener("click",save);
 butonBack.addEventListener("click",restore);
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 'z') {
+      restore();
+    }
+  });
 butonEraser.addEventListener("click",erase);
 butonBrush.addEventListener("click",displayBrush);
 butonBrush.addEventListener("mouseout",unDisplayBrush)
 wrapperBrush.addEventListener("mouseout",unDisplayBrush);
-wrapperBrush.addEventListener("mouseover",function(){
-    console.log("overed")});
-// butonBrush.addEventListener("mouseleave",function(){
-//     document.addEventListener('mouseover', (event) => {
-//         console.log(event.target);
-//         if (!(event.target in [wrapperBrush,lineWeightSlider[0],lineWeightSlider[1],lineWeightSlider[2]])){
-//             console.log('not')
-//             console.log([wrapperBrush,lineWeightSlider[0],lineWeightSlider[1],lineWeightSlider[2]])
-//         }
-//       });
-// })
+
+document.addEventListener("DOMContentLoaded",function(){
+    
+    cursor.style.width =  ctx.lineWidth+ "px";
+    cursor.style.height = ctx.lineWidth+ "px";
+    canvas.addEventListener("mousemove",function(e){
+        cursor.style.left = e.clientX+1+'px';
+        cursor.style.top = e.clientY+1+'px';
+    })
+})
+canvas.addEventListener("mouseout",function(){
+    cursor.style.display = "none"
+})
+canvas.addEventListener("mouseenter",function(){
+    cursor.style.display = "block"
+})
 window.addEventListener("load", sauvegarde, false)
 
 
